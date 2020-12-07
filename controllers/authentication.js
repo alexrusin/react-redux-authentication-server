@@ -18,7 +18,7 @@ export async function signup (req, res, next) {
             password
         })
         await user.save()
-        res.json({...user.toJSON(), token: user.generateAuthToken()})
+        res.json({token: user.generateAuthToken()})
     } catch (error) {
         return next(error)
     }

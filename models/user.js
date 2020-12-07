@@ -14,6 +14,22 @@ const userSchema = new Schema({
     password: String
 })
 
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({email})
+
+    if (!user) {
+        throw new Error('NotFound')
+    } 
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+        throw new Error('Unauthorized')
+    }
+
+    return user
+}
+
 userSchema.methods.generateAuthToken = function () {
     const user = this
     const timestamp = new Date().getTime()
