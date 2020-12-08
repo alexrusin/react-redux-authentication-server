@@ -23,3 +23,9 @@ export async function signup (req, res, next) {
         return next(error)
     }
 }
+
+export function signin(req,res, next) {
+    res.send({
+        token: req.user.generateAuthToken()
+    })
+}

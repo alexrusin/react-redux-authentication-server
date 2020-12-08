@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jwt-simple'
+import validator from 'validator'
 
 const Schema = mongoose.Schema
 
@@ -10,11 +11,29 @@ const userSchema = new Schema({
         unique: true,
         trim: true,
         lowercase: true,
+        required: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error('Email is invalid');
+            }
+        }
+        
     },
-    password: String
+    password: {
+        type: String,
+        requried: true,
+        trim: true,
+        minlength: 3,
+        validate(value) {
+            if (value.toLowerCase().includes('password')) {
+                throw new Error('Password cannot contain password')
+            }
+        }
+    }
 })
 
 userSchema.statics.findByCredentials = async (email, password) => {
+    
     const user = await User.findOne({email})
 
     if (!user) {
@@ -62,6 +81,6 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-const ModelClass = mongoose.model('user', userSchema)
+const User = mongoose.model('user', userSchema)
 
-export default ModelClass
+export default User

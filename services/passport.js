@@ -10,7 +10,8 @@ const localLogin = new LocalStrategy({
     usernameField: 'email',
 }, async (email, password, done) => {
     try {
-        await User.findByCredentials(email, password)
+        const user = await User.findByCredentials(email, password)
+        done(null, user)
     } catch (err) {
         if (err.message === 'NotFound' || 'Unauthorized') {
             return done(null, false)
@@ -40,3 +41,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 })
 
 passport.use(jwtLogin)
+passport.use(localLogin)
