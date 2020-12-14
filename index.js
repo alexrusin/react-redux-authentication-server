@@ -3,6 +3,7 @@ import http from 'http'
 import morgan from 'morgan'
 import router from './router'
 import mongoose from 'mongoose'
+import cors from 'cors'
 const app = express()
 
 mongoose.connect('mongodb://127.0.0.1:27017/auth', { 
@@ -12,6 +13,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/auth', {
  })
 
 app.use(morgan('combined'))
+app.use(cors())
 app.use(express.json())
 
 router(app)
